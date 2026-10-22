@@ -17,8 +17,6 @@ A Starsector mod that tracks every war in the Sector. It adds one entry to the I
 
 ![Hostilities: an alliance war and two of its fronts](docs/hostilities.png)
 
-![The Archive: a timeline of every war](docs/archive.png)
-
 ![A faction page: its record, then its wars](docs/faction-archive.png)
 
 </details>
