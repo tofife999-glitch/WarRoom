@@ -38,10 +38,9 @@ A Starsector mod that tracks every war in the Sector. It adds one entry to the I
 <details>
 <summary><b>AI use disclaimer</b></summary>
 
-Some or all assets and code in this mod were created using AI tools:
+Some assets and code in this mod were created using AI tools:
 
-- Code: Claude Opus 5.5 (design and in-game testing by Jan)
+- Code: Claude Opus 5.5
 - Icons: Claude Opus 5.5 (drawn in code; some shapes based on Tabler Icons)
-- Text (Briefing, labels, this README): Claude Opus 5.5
 
 </details>
