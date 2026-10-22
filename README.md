@@ -4,8 +4,6 @@ A Starsector mod that tracks every war in the Sector. It adds one entry to the I
 
 **Needs:** Starsector 0.98a · Nexerelin · LazyLib
 
-![Hostilities: an alliance war and two of its fronts](docs/hostilities.png)
-
 **What you get**
 - **Hostilities**: every active war. Who leads, who is gaining, battles, captured colonies, ships lost.
 - **War reports**: one per war. Event log, turning points, battle locations, strength comparison.
@@ -14,9 +12,16 @@ A Starsector mod that tracks every war in the Sector. It adds one entry to the I
 - **Standings**: factions and alliances ranked by colonies, territory won and lost, and wars.
 - **Briefing**: how war weariness, peace, alliances and the war score work.
 
+<details>
+<summary><b>Screenshots</b></summary>
+
+![Hostilities: an alliance war and two of its fronts](docs/hostilities.png)
+
 ![The Archive: a timeline of every war](docs/archive.png)
 
 ![A faction page: its record, then its wars](docs/faction-archive.png)
+
+</details>
 
 **Extra info**
 - Records start at install. For the full history, start a new save.
