@@ -1,0 +1,92 @@
+{
+	# War Room: fleet points destroyed in one battle, both sides together, for a "large battle" story event.
+	"warRoom_largeBattleFP":200,
+
+	# War Room war score (the bar on each war). Changes apply to every war, past ones included.
+	# Points per colony size taken or bombarded, against an enemy whose colonies total warRoom_scoreSizeReference;
+	# taking from smaller enemies counts more, from bigger ones less.
+	"warRoom_scoreColonySize":10,
+	"warRoom_scoreSizeReference":40,
+	# Fleet points destroyed per point.
+	"warRoom_scoreFpPerPoint":10,
+	# Points per successful raid, per invasion beaten back, per off-screen engagement won.
+	"warRoom_scoreRaidWon":5,
+	"warRoom_scoreInvasionRepelled":5,
+	"warRoom_scoreEngagementWon":3,
+	# Hidden points each side starts with, so one skirmish can't paint the bar 100:0.
+	"warRoom_scoreHeadStart":20,
+
+	# War Room: how many days "Past 90 days" looks back, on each war (who is gaining ground) and in the summary
+	# under the title. Fewer than 10 points per 30 days reads as quiet.
+	"warRoom_recentDays":90,
+
+	# Screen touches that make the report look like intel read aboard your ship. "warRoom_flourishes":false
+	# switches all of them off at once; each can also be switched off on its own by setting it to false (takes
+	# effect after restarting the game):
+	# Serial: the report number after the source line. Addressee: "Prepared for Captain ..." under the date.
+	# RelayLight: the comm relay light under that. SyncSweep: a line runs along the header when a page opens.
+	# Signature: "Compiled aboard ..." at the bottom of each tab. EndRule: "End of assessment" under that.
+	# Intercept: the latest events fading by at the top of Hostilities. Engaged: a light on cards of wars with
+	# fighting in the last 30 days. GaugeTicks: quarter marks on the advantage bars. NowLine: today's line on the
+	# timeline. CycleBands: every other cycle faintly shaded on the timeline. Ranks: place numbers in Standings.
+	# Struck: names of factions without colonies struck through. SectorTotal: the Sector row in Standings.
+	# Audio: the game's interface sounds for switching tabs (warRoom_soundTab) and opening a war report
+	# (warRoom_soundReport); any of the game's sound ids works.
+	# MomentumArrow: an arrow before "Past 90 days", toward the side gaining ground. NewWar: a war in its first 30
+	# days gets an amber frame and a small "New conflict - started 12 days ago" line on its card; the frame lights
+	# up once when Hostilities opens. StampedMonths: the Chronicle's months as date stamps. TheatreDistances: how
+	# far each system on a war report's Theatre line is from your fleet. InterceptClick: clicking the intercept
+	# line opens that war's report. TensionTrace: the Sector's fighting month by month over the past 3 cycles,
+	# right of the tabs. Hologram: the title flickers on when War Room opens. StruckTimeline: a faction eliminated
+	# in a war is struck through on that war's row in the Archive timeline. RankTips: a faction's tooltip gives its
+	# place in the Sector by colony size. RelayName: the relay line names the comm relay you are linked through.
+	"warRoom_flourishes":true,
+	"warRoom_flourishSerial":true,
+	"warRoom_flourishAddressee":true,
+	"warRoom_flourishRelayLight":true,
+	"warRoom_flourishSyncSweep":true,
+	"warRoom_flourishSignature":true,
+	"warRoom_flourishEndRule":true,
+	"warRoom_flourishIntercept":true,
+	"warRoom_flourishEngaged":true,
+	"warRoom_flourishGaugeTicks":true,
+	"warRoom_flourishNowLine":true,
+	"warRoom_flourishCycleBands":true,
+	"warRoom_flourishRanks":true,
+	"warRoom_flourishStruck":true,
+	"warRoom_flourishSectorTotal":true,
+	"warRoom_flourishAudio":true,
+	"warRoom_flourishMomentumArrow":true,
+	"warRoom_flourishNewWar":true,
+	"warRoom_flourishStampedMonths":true,
+	"warRoom_flourishTheatreDistances":true,
+	"warRoom_flourishInterceptClick":true,
+	"warRoom_flourishTensionTrace":true,
+	"warRoom_flourishHologram":true,
+	"warRoom_flourishStruckTimeline":true,
+	"warRoom_flourishRankTips":true,
+	"warRoom_flourishRelayName":true,
+	"warRoom_soundTab":"ui_intel_minor_message",
+	"warRoom_soundReport":"ui_channel_intel_assessment",
+
+	# War Room's own icons (loaded at startup; tinted in the game's colours when drawn).
+	"graphics":{
+		"warroom":{
+			"icon_capture":"graphics/warroom/icons/capture.png",
+			"icon_battle":"graphics/warroom/icons/battle.png",
+			"icon_bombard":"graphics/warroom/icons/bombard.png",
+			"icon_ceasefire":"graphics/warroom/icons/ceasefire.png",
+			"icon_began":"graphics/warroom/icons/began.png",
+			"icon_raid":"graphics/warroom/icons/raid.png",
+			"icon_repelled":"graphics/warroom/icons/repelled.png",
+			"icon_alliance":"graphics/warroom/icons/alliance.png",
+			"icon_eliminated":"graphics/warroom/icons/eliminated.png",
+			"icon_arrived":"graphics/warroom/icons/arrived.png",
+			"icon_age":"graphics/warroom/icons/age.png",
+			"icon_advantage":"graphics/warroom/icons/advantage.png",
+			"fx_dot":"graphics/warroom/fx/dot.png",
+			"fx_sweep":"graphics/warroom/fx/sweep.png",
+			"fx_px":"graphics/warroom/fx/px.png",
+		},
+	},
+}

@@ -1,0 +1,183 @@
+War Room - changelog
+
+0.14.0 (2026-10-22)
+- Sounds: back to the game's own, one for switching tabs and one for opening a war report; War Room's made
+  sounds are gone.
+- The intercept line holds the event it shows while the pointer is on it, so a click opens that event's war.
+- One switch for all screen touches: "warRoom_flourishes": false in settings.json turns every one of them off.
+
+0.13.2 (2026-10-22)
+- The Archive's sound: a relay, then a memory drum spinning up and settling.
+
+0.13.1 (2026-10-22)
+- The tab sounds as picked: Hostilities a heavy relay and a muffled buzz, Archive drive-seek chatter,
+  Standings a teleprinter's keystrokes, Briefing a split-flap board.
+
+0.13.0 (2026-10-22)
+- The tab sounds now play (0.12.0's were mono files, which the game does not play as interface sounds), and
+  they are new: the noises of the tablet itself (a relay and a radio channel opening, drive-seek chatter, rows
+  ticking onto the display, a document drawn up), not tones. Loudness is "volume" in data/config/sounds.json.
+- New wars: the stamp is gone; the card says "New conflict - started 21 days ago" in small print inside its
+  amber frame.
+- More screen touches, each switchable: a faction eliminated in a war is struck through on that war's row in
+  the Archive timeline; a faction's tooltip gives its place in the Sector by colony size ("2nd of 14"); the
+  relay line names the relay you are linked through ("Relay link steady: Askonia relay").
+
+0.12.0 (2026-10-22)
+- Each tab has its own short sound, made for War Room; opening a Faction or Alliance Archive plays the
+  Archive's. Any of them can be set to another sound in settings.json.
+- Alliance wars show who is gaining ground too ("Past 90 days: ..."), with the momentum arrow.
+- New wars: a war's card keeps an amber frame and a "New war - day 12 of 30" stamp for its first 30 days (the
+  frame still lights up once when Hostilities opens).
+- The intercept line: "INTERCEPT" is no longer cut off, each event stays on one line, and clicking the line
+  opens the report of the war it is about.
+- More screen touches, each switchable: a trace of the Sector's tension over the past 3 cycles at the right of
+  the tabs, and the title flickering on like a projection when War Room opens.
+- The cycle bands on the timeline are much fainter.
+- The opening sweep and the new-war flash run when a page opens or War Room comes back on screen, no longer on
+  a click after a pause.
+
+0.11.0 (2026-10-22)
+- "Past 90 days" instead of "Past 30 days": who is gaining ground on each war, and the summary under the
+  title, now look back 90 days. Set "warRoom_recentDays" in settings.json for another span, such as 180.
+  Quiet still means under 10 points per 30 days.
+- The "Engaged" light now marks wars with fighting in the last 30 days (was 3).
+- More screen touches, each switchable in settings.json: an arrow before "Past 90 days" pointing to the side
+  gaining ground, on war cards and reports; the card of a war begun in the last 30 days flashes once when
+  Hostilities opens; the Chronicle's months as date stamps; and how far each system on a war report's
+  Theatre line is from your fleet ("Askonia (14 ly)").
+
+0.10.0 (2026-10-22)
+- Standings for alliances: switch between Factions and Alliances. Each alliance shows its members, their
+  colonies together, the change since records began, colony size taken and lost while in the alliance and
+  its fronts under way; a row opens the Alliance Archive.
+- More screen touches, each switchable in settings.json: an intercept line at the top of Hostilities (the
+  latest events fading by), an "Engaged" light on cards of wars with fighting in the last 3 days, quarter
+  marks on the advantage bars, today's line and faint cycle bands on the timeline, rank numbers, struck-through
+  names of factions without colonies and a Sector total row in Standings, and quiet interface sounds when you
+  switch tabs or open a war report.
+- Removed: the scanlines and the RESTRICTED tag; the date, addressee and relay light now sit at the far right.
+- "End of assessment" is no longer cut short.
+
+0.9.0 (2026-10-22)
+- Screen touches, each with its own switch in data/config/settings.json ("warRoom_flourish..."):
+  - the report number after the source line ("No. 206-306": cycle and day);
+  - "Prepared for Captain <your name>" under the date;
+  - a relay light that pulses green while you are in comm relay range ("Relay link steady"), amber when not;
+  - a small "RESTRICTED" tag at the top right;
+  - faint scanlines behind the header;
+  - a thin line that runs once along the header when a page opens;
+  - "Compiled aboard <your flagship>, fleet intelligence section." and "End of assessment" at the bottom of
+    each tab.
+- The header is 4 px taller; the tabs now always sit on its bottom row.
+
+0.8.0 (2026-10-22)
+- Turning points: the war log notes when a side takes the advantage, or when the two are evenly matched
+  again (with a margin, so a war near the line doesn't fill the log). They also show in the Chronicle.
+- Big fights Nexerelin settles far from you (200 fleet points or more lost) now go into the war log as
+  major battles, marked reported, with the system they were fought in; they also show on the timeline.
+- War reports name the theatre: the systems where the war's logged events happened, busiest first.
+- Hovering a timeline icon is more reliable: the hover area now covers the whole icon.
+
+0.7.0 (2026-10-21)
+- Hostilities: sort buttons on each section's heading (hourglass: war age, swords: battles, flag: colonies
+  captured, scales: advantage). One click sorts most first, two least first, three back to the usual order;
+  a small arrow shows which.
+- Standings: click a column heading to sort by it the same way (names A to Z, then Z to A).
+
+0.6.1 (2026-10-21)
+- A war between two alliances that later merged now counts once in the merged alliance's service record.
+- A Faction or Alliance Archive whose wars are all older than the Archive keeps says so, instead of "no
+  wars on record" under a service record that counts them.
+- Standings: in a save from before 0.6, the tooltip now says when War Room first noted a faction's colony
+  size, instead of claiming that was when it first held colonies.
+
+0.6.0 (2026-10-21)
+- Service record at the top of every Faction and Alliance Archive: wars on record, under way, how they
+  ended (ceasefires, peace treaties, enemies eliminated...) and who held the advantage at the end, then
+  battles, colonies, ships, raids and invasions against its enemies.
+- New Standings tab (after Archive): every faction holding colonies, by colony size, with the change since
+  records began, colony size taken and lost in war, and wars under way. Click a faction for its archive.
+- Wars the Archive no longer keeps still count in service records and standings.
+- Demo: "warroom_demo big" makes a ten-cycle history with the Archive full, and the demo line shows how
+  long each page took to build.
+
+0.5.1 (2026-10-21)
+- A faction's flag or name on the war cards and war reports opens its Faction Archive; an alliance's name
+  (and each member's crest) in an alliance war opens the new Alliance Archive: the wars its members fought in
+  the alliance, and its news. Opened from the report, these archives have a Back button.
+- The Archive's bars have one shade for an advantage (the "clear advantage" shade is gone).
+
+0.5.0 (2026-10-21)
+- Faction Archive: the Intel screen's Factions tab has a small "Faction Archive (War Room)" button for the
+  faction shown. It opens the Archive for that faction only: its wars, one row per enemy, and its events
+  and news in the Chronicle. "All factions" goes back to the whole Archive.
+- Ceasefire or peace treaty: wars that end from now on say which one ended them (in the war log, the
+  Chronicle and the ended-war cards). Peace by other means, and older wars, still read "Hostilities ceased".
+- Your own raids and tactical bombardments now count as raids won for the faction you fight for, with
+  their own lines in the war log.
+- The Archive legend explains all four bar shades: nothing to report yet, evenly matched, advantage,
+  clear advantage.
+- The report's source line no longer mentions projections.
+
+0.4.2 (2026-10-21)
+- Archive: no more dark box behind each war's icons and bar; the faint outline now sits right around
+  the coloured bar only. Rows and links still light up when you hover them.
+
+0.4.1 (2026-10-21)
+- The Archive redesigned. Timeline: taller rows with each faction's flag, thicker bars with a faint
+  outline, no blue row background, cycle gridlines, and War Room's own icons sitting on the bars in the
+  colour of the side that scored (colony captured, major battle won, bombardment, ceasefire); a legend
+  explains the icons and the bar colours. Hover an icon for its event.
+- New Chronicle below the timeline: every notable event of every war and the Sector news, newest first
+  by month, with filters and a link to each war's report. It replaces the Ended wars and Sector news lists.
+
+0.4.0 (2026-10-21)
+- Reads like an intelligence report on your ship: new wording throughout (war log, military report,
+  "holds the advantage", "Past 30 days: ... gaining ground", confirmed and reported battles), a source
+  line and an "As of" date under the title, and a sources note under each military report.
+- Three tabs: Hostilities (the wars under way), Archive (a timeline of every war on record with
+  colonies captured, major battles and ceasefires marked, plus ended wars and Sector news) and Briefing
+  (how war weariness, peace, alliances, fleet and ground pools, raids, invasions and the war score work).
+- Bombardments now say what happened to the colony: "Colony size reduced from 5 to 4." or "Colony
+  destroyed."
+- Battles won on a war's report shows how many of them were reported from far away.
+
+0.3.1 (2026-10-20)
+- Demo mode for trying the pages out: with Console Commands, "warroom_demo" fills War Room with a made-up
+  history built from the sector's real factions, colonies and alliances (an alliance war, single wars of
+  every kind, ended wars). Your own records are set aside and tracking pauses meanwhile; nothing of the
+  demo is saved. "warroom_demo off" or loading a save brings them back; "warroom_demo new" makes another.
+
+0.3.0 (2026-10-20)
+- New design: the matrix and the tabs are gone. War Room now opens on Active wars: one card per war
+  (your wars first, then the others, then wars that just ended) with a bar showing who is winning, who
+  is gaining lately, battles won, colonies taken, ships lost and the latest event.
+- Alliances at war are shown as one block with combined strength and totals, their fronts below.
+- Each war has its own page: its story, what is happening now, the totals, strength now and the lead
+  over time, with Back / Prev / Next and jumps to faction profiles, raid intel and the map.
+- Now also tracked: off-screen fights (as estimates, marked "~"), bombardments, invasions beaten back,
+  alliance changes and factions losing their last colony.
+- Pirate wars are hidden unless you are in them; one click shows them.
+- The probe page from 0.2.1 is removed. Saves from 0.2 are carried over.
+- Settings: war score weights added; a "large battle" is now 200 fleet points.
+
+0.2.1 (2026-10-20)
+- Temporary: a "War Room UI probe" entry next to War Room, with four quick checks for the next version.
+  It changes nothing in the game and goes away again in 0.3.
+
+0.2.0 (2026-10-20)
+- Records the wars from now on: when each began and ended, battles and who won them, ships and fleet
+  points lost, colonies captured, Nexerelin raids and invasions (launched / succeeded, counting those
+  being prepared or under way) and ground battles.
+- Wars tab shows that history; hover a war for the full breakdown, click it for its log entries.
+- New War log tab: wars, peace (with the war's totals), captured colonies, large battles (100 fleet points
+  lost or more), alliance changes, factions losing their last colony; filters by kind; keeps the last 300
+  entries. Both numbers are settings in data/config/settings.json.
+- Still removable from saves: the history is saved as plain text values only.
+
+0.1.0 (2026-10-20)
+- First version, for Starsector 0.98a-RC8 with Nexerelin 0.12.2d.
+- War Room intel entry under its own tag, with three tabs built from the current state: the war matrix,
+  the ongoing wars and the factions.
+- Can be added to and removed from running saves: nothing in the save needs the mod to load.
