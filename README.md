@@ -34,3 +34,14 @@ A Starsector mod that tracks every war in the Sector. It adds one entry to the I
 
 **License:** MIT. Credits: Histidine (Nexerelin), LazyWizard (LazyLib); some icons based on Tabler Icons
 (MIT, see `graphics/warroom/icons`).
+
+<details>
+<summary><b>AI use disclaimer</b></summary>
+
+Some or all assets and code in this mod were created using AI tools:
+
+- Code: Claude Opus 5.5 (design and in-game testing by Jan)
+- Icons: Claude Opus 5.5 (drawn in code; some shapes based on Tabler Icons)
+- Text (Briefing, labels, this README): Claude Opus 5.5
+
+</details>
