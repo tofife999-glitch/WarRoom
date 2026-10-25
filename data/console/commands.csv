@@ -1,2 +1,0 @@
-command,class,tags,syntax,help
-warroom_demo,warroom.console.WarRoomDemo,"warroom,campaign",warroom_demo [off|new|<seed>],"Shows War Room with a made-up history built from the sector's real factions, colonies and alliances, to try out its pages. Your own records are set aside and tracking pauses meanwhile; nothing of the demo is saved. warroom_demo off (or loading a save) brings them back; warroom_demo new makes another history."

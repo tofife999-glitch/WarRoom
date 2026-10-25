@@ -1,0 +1,11 @@
+{
+	"masterVersionFile":"https://raw.githubusercontent.com/tofife999-glitch/WarRoom/main/war_room.version",
+	"modName":"War Room",
+	"modVersion":
+	{
+		"major":0,
+		"minor":15,
+		"patch":0
+	},
+	"directDownloadURL":"https://github.com/tofife999-glitch/WarRoom/releases/download/v0.15.0/WarRoom-0.15.0.zip"
+}

@@ -15,6 +15,8 @@ War Room - changelog
 - Sorting Hostilities values an alliance war as its block shows it, ended fronts included.
 - On the Archive timeline, an older war between the same two factions keeps its own colours.
 - The Factions-screen button checks a few times a second instead of every frame.
+- Works with Version Checker: mod managers such as TriOS see new releases and can download them.
+- The warroom_demo console command (a testing tool) is gone.
 
 0.14.0 (2026-10-22)
 - Sounds: back to the game's own, one for switching tabs and one for opening a war report; War Room's made
