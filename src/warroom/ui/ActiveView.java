@@ -8,10 +8,8 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import warroom.Fmt;
 import warroom.Score;
 import warroom.SectorSnapshot;
-import warroom.Settings;
 import warroom.data.StoryEvent;
 import warroom.data.WarData;
 import warroom.data.WarRecord;
@@ -345,18 +343,6 @@ public final class ActiveView {
         if (Wars.mine(r)) parts.add("Your war");
         if (r.pirate) parts.add("Pirate war");
         return String.join(", ", parts);
-    }
-
-    /** "Past 90 days: 1 new war, 1 ceasefire or treaty, 3 colonies changed hands." for the header. */
-    static Phrase recent(WarData d, long now) {
-        long window = Settings.recentDays() * WarData.DAY;
-        Phrase p = new Phrase();
-        if (now - d.since < window) {
-            p.add("Since records began on ").hl(Fmt.date(d.since), Misc.getHighlightColor()).add(": ");
-        } else {
-            p.add(Wars.recentLabel() + ": ");
-        }
-        return Story.append(p, countsPhrase(counts(d, now - window, now)));
     }
 
     /**

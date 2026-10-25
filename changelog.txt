@@ -1,11 +1,11 @@
 War Room - changelog
 
 0.15.0 (2026-10-25)
-- Since your last look: a line under the title counts what happened since you last opened War Room (new
-  wars, wars ended, colonies changed hands). Hover it for the list of events.
+- Since your last look: the line under the title now counts what happened since you last opened War Room
+  (new wars, wars ended, colonies changed hands) instead of the past 90 days. Hover it for the list of events.
 - Faction tooltips say who the faction is at war with (pirates left out).
-- Hovering "Colonies captured" on a war card or war report lists the colonies each side took, with sizes
-  and dates.
+- Hovering "Colonies captured" on a war card, a war report or an alliance war lists the colonies each side
+  took, with sizes and dates.
 - Factions that come back or get their first colony (a Nexerelin respawn, or your own first colony): their
   first capture now counts in the war, and their wars read "first recorded" instead of "began".
 - Saturation bombardments no longer count as failed raids.

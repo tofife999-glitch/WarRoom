@@ -170,6 +170,40 @@ final class Tips {
         };
     }
 
+    /** The colonies each alliance captured over all fronts of an alliance war: name, size, who took it, when. */
+    static Tip captures(final Wars.AllianceWar g) {
+        return new Tip(480f) {
+            @Override
+            void fill(TooltipMakerAPI t) {
+                Color h = Misc.getHighlightColor();
+                for (int k = 0; k < 2; k++) {
+                    int total = g.sum(WarRecord.CAPTURED, k);
+                    List<Object[]> taken = new ArrayList<>();
+                    for (WarRecord r : g.fronts) {
+                        int side = k == 0 ? g.leftSide(r) : 1 - g.leftSide(r);
+                        for (StoryEvent e : r.story) {
+                            if (e.kind == StoryEvent.Kind.CAPTURE && e.side == side) taken.add(new Object[]{e, r});
+                        }
+                    }
+                    taken.sort((x, y) -> Long.compare(((StoryEvent) x[0]).time, ((StoryEvent) y[0]).time));
+                    para(t, new Phrase().hl(g.name[k], h).add(total == 0 ? " captured no colonies."
+                            : total == 1 ? " captured 1 colony:" : " captured " + total + " colonies:"), k == 0 ? 0f : 10f);
+                    int shown = Math.min(20, taken.size());
+                    for (int i = 0; i < shown; i++) {
+                        StoryEvent e = (StoryEvent) taken.get(i)[0];
+                        WarRecord r = (WarRecord) taken.get(i)[1];
+                        para(t, new Phrase().add("    ").hl(e.text == null ? "a colony" : e.text, h).add(" (size ").num(e.n(0))
+                                .add("), by ").the(r.id(e.side), false).add(", " + Fmt.date(e.time)), 2f);
+                    }
+                    if (shown < total) {
+                        t.addPara("    and " + (total - shown) + " more" + (taken.size() > shown ? "." : ", older than the war logs keep."),
+                                Misc.getGrayColor(), 2f);
+                    }
+                }
+            }
+        };
+    }
+
     /** What the Chronicle logged since your last look, newest first (at most 15 entries). */
     static Tip since(final long from, final long now) {
         return new Tip(600f) {

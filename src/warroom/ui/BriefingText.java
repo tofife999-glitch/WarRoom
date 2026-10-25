@@ -34,7 +34,7 @@ final class BriefingText {
                     "- Hegemony holds the advantage: 55% or more.",
                     "- Hegemony holds a clear advantage: 75% or more. Ended wars say \"held\".",
                     "The war log notes each turning point: a side taking the advantage (55% or more), or the two being evenly matched again (back within 47% to 53%). Between those lines nothing is logged, so a war hovering near one does not fill the log.",
-                    "Past {days} days weighs roughly the last {days} days' points: under {quiet} in all is quiet, a side with 60% or more is gaining ground, anything else is an even exchange. The summary under the title looks back as far; how far is a War Room setting.",
+                    "Past {days} days weighs roughly the last {days} days' points: under {quiet} in all is quiet, a side with 60% or more is gaining ground, anything else is an even exchange. How far back it looks is a War Room setting. The line under the title counts what happened since you last opened War Room; hover it for the list.",
                     "Battles won counts confirmed battles, fought near you with every ship counted, and reported ones, settled far away; on a war page, the row \"of these, reported\" gives the far-away part.",
                     "A ~ marks a number that includes estimates. For the split, hover the number on a war card, or the row name on a war page.",
                     "A war under 30 days old, begun after records began, is marked as a new conflict. Ended wars stay under Recently ended for 14 days."},

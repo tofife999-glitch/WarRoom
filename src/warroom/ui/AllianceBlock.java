@@ -229,11 +229,16 @@ final class AllianceBlock {
             String b = (k == 2 && g.estimated(1) ? "~" : "") + Fmt.num(vals[k][1]);
             Color h = Misc.getHighlightColor();
             boolean bright = k < 2;
-            Ui.text(in, a, bright && vals[k][0] > vals[k][1] ? h : Misc.getTextColor(), PAD, y, mid - lw / 2f - PAD - 6f, 1,
-                    Alignment.RMID);
-            Ui.text(in, labels[k], Misc.getGrayColor(), mid - lw / 2f, y, lw, 1, Alignment.MID);
-            Ui.text(in, b, bright && vals[k][1] > vals[k][0] ? h : Misc.getTextColor(), mid + lw / 2f + 6f, y,
+            Ui.Placed pa = Ui.text(in, a, bright && vals[k][0] > vals[k][1] ? h : Misc.getTextColor(), PAD, y,
+                    mid - lw / 2f - PAD - 6f, 1, Alignment.RMID);
+            Ui.Placed pl = Ui.text(in, labels[k], Misc.getGrayColor(), mid - lw / 2f, y, lw, 1, Alignment.MID);
+            Ui.Placed pb = Ui.text(in, b, bright && vals[k][1] > vals[k][0] ? h : Misc.getTextColor(), mid + lw / 2f + 6f, y,
                     mid - lw / 2f - PAD - 6f, 1, Alignment.LMID);
+            if (k == 1) {
+                // The colonies taken on every front, by whom and when.
+                Tips.Tip tip = Tips.captures(g);
+                for (Ui.Placed pp : new Ui.Placed[]{pa, pl, pb}) Ui.tooltip(in, pp.comp, tip);
+            }
             y += 18f;
         }
         if (!onPage) {

@@ -388,7 +388,7 @@ final class Wars {
         return p.add(verb + (v == Score.Verdict.FAR_AHEAD ? "a clear advantage" : "the advantage"));
     }
 
-    /** "Past 90 days": how far back the momentum line and the header's summary look (warRoom_recentDays). */
+    /** "Past 90 days": how far back the momentum line looks (warRoom_recentDays). */
     static String recentLabel() {
         return "Past " + Settings.recentDays() + " days";
     }

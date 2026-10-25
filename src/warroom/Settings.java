@@ -48,7 +48,7 @@ public final class Settings {
         return Math.max(0f, getFloat("warRoom_scoreHeadStart", 20f));
     }
 
-    /** Days the "Past 90 days" readings look back: who is gaining ground on each war, and the header's summary. */
+    /** Days "Past 90 days" looks back: who is gaining ground on each war. */
     public static int recentDays() {
         return getInt("warRoom_recentDays", 90, 10, 720);
     }

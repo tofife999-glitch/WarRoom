@@ -16,8 +16,8 @@
 	# Hidden points each side starts with, so one skirmish can't paint the bar 100:0.
 	"warRoom_scoreHeadStart":20,
 
-	# War Room: how many days "Past 90 days" looks back, on each war (who is gaining ground) and in the summary
-	# under the title. Fewer than 10 points per 30 days reads as quiet.
+	# War Room: how many days "Past 90 days" looks back on each war (who is gaining ground). Fewer than 10 points
+	# per 30 days reads as quiet.
 	"warRoom_recentDays":90,
 
 	# Screen touches that make the report look like intel read aboard your ship. "warRoom_flourishes":false

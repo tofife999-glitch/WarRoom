@@ -26,7 +26,7 @@ import java.util.List;
  * complete; if it fails, a note with a way back takes its place instead of the game crashing.
  */
 public final class Pages {
-    private static final float HEADER_H = 116f;
+    private static final float HEADER_H = 100f;
     /**
      * For the touches that run once (sync sweep, new-war flash, title settle): the view last built, and when War
      * Room was last on screen (a heartbeat on the page notes it every frame). A page counts as opened when the
@@ -154,19 +154,14 @@ public final class Pages {
             int wars = warCounts(now)[0];
             int alliances = s.alliances.size();
             p = new Phrase().num(wars).add(wars == 1 ? " active war, " : " active wars, ").num(alliances)
-                    .add(alliances == 1 ? " alliance. " : " alliances. ");
-            Story.append(p, ActiveView.recent(d, now));
+                    .add(alliances == 1 ? " alliance." : " alliances.");
+            // What happened since War Room was last opened; hovering the line lists the events.
+            if (View.lookSince != 0) Story.append(p.add(" "), sinceLook(d, View.lookSince, now));
             base = Misc.getGrayColor();
         }
-        Ui.text(head, p.text(), base, 0f, y + line + 4f, Math.max(120f, headW - colW - 20f), 1, Alignment.LMID,
+        Ui.Placed sum = Ui.text(head, p.text(), base, 0f, y + line + 4f, Math.max(120f, headW - colW - 20f), 1, Alignment.LMID,
                 p.highlights(), p.colors());
-        if (!Demo.isOn() && View.lookSince != 0) {
-            // What happened since War Room was last opened; hovering it lists the events.
-            Phrase since = sinceLook(d, View.lookSince, now);
-            Ui.Placed sl = Ui.text(head, since.text(), Misc.getGrayColor(), 0f, y + line + 22f, Math.max(120f, headW - colW - 20f),
-                    1, Alignment.LMID, since.highlights(), since.colors());
-            Ui.tooltip(head, sl.comp, Tips.since(View.lookSince, now));
-        }
+        if (!Demo.isOn() && View.lookSince != 0) Ui.tooltip(head, sum.comp, Tips.since(View.lookSince, now));
         float tabY = HEADER_H - 26f;
         tab(head, View.Tab.HOSTILITIES, "Hostilities", "Wars under way.", 0, tabY);
         tab(head, View.Tab.ARCHIVE, "Archive", "Every war on record, and Sector news.", 1, tabY);
