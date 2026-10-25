@@ -153,6 +153,8 @@ public final class WarTracker {
                 d.addNews(new LogEntry(now, LogEntry.Kind.ARRIVED, id, null, null, null));
             }
         }
+        // Factions that held colonies at the last check: a war with one that did not is first recorded, not begun.
+        Set<String> before = new LinkedHashSet<>(d.factions);
         d.factions.clear();
         d.factions.addAll(current);
         // Each faction's total colony size when records began, or when it first held colonies later. A save
@@ -180,7 +182,7 @@ public final class WarTracker {
                 WarRecord r = d.active(a, b);
                 boolean war = s.rel[i][j] == Rel.WAR;
                 if (war && r == null) {
-                    create(d, a, b, now, !stock || newGame, s);
+                    create(d, a, b, now, newGame || (!stock && before.contains(a) && before.contains(b)), s);
                 } else if (!war && r != null) {
                     // How peace came is only known for a peace made since the last check; a waiting report
                     // is used up either way.
@@ -297,18 +299,30 @@ public final class WarTracker {
 
     /**
      * The war record of two factions. If there is none yet but both have colonies and are hostile, the war
-     * began since the last daily check: it is recorded now.
+     * began since the last daily check: it is recorded now. A side that held no colonies at that check (a
+     * faction coming back, its first colony just taken; your own first colony) was hostile before War Room
+     * could follow it, so its war is first recorded now rather than begun.
      */
     static WarRecord war(String x, String y) {
         if (x == null || y == null || x.equals(y)) return null;
         WarData d = WarData.get();
         WarRecord r = d.active(x, y);
         if (r != null) return r;
-        if (d.since == 0 || !d.factions.contains(x) || !d.factions.contains(y)) return null;
+        if (d.since == 0 || !holds(d, x) || !holds(d, y)) return null;
         FactionAPI fx = Global.getSector().getFaction(x);
         FactionAPI fy = Global.getSector().getFaction(y);
         if (fx == null || fy == null || !fx.isHostileTo(fy)) return null;
-        return create(d, x, y, now(), true, SectorSnapshot.get());
+        boolean known = d.factions.contains(x) && d.factions.contains(y);
+        return create(d, x, y, now(), known, SectorSnapshot.get());
+    }
+
+    /** Held colonies at the last check, or holds one now (its first may have been taken since). */
+    private static boolean holds(WarData d, String id) {
+        if (d.factions.contains(id)) return true;
+        for (MarketAPI m : Misc.getFactionMarkets(id)) {
+            if (!m.isHidden() && !m.isPlanetConditionMarketOnly()) return true;
+        }
+        return false;
     }
 
     // ------------------------------------------------------------------ battles in space
@@ -808,14 +822,15 @@ public final class WarTracker {
             if (hostileNow) invasionEnded(inv, attacker, owner, target);
             return;
         }
+        // A saturation bombardment is no raid: it is recorded (and scores) as the bombardment itself.
+        if (intel instanceof SatBombIntel) return;
         boolean won = raidSucceeded(intel);
         if ((o == OffensiveOutcome.NO_LONGER_HOSTILE && !won) || defender == null || !launched(intel)) return;
         WarRecord r = war(attacker.getId(), defender.getId());
         if (r == null) return;
         int side = r.side(attacker.getId());
         r.add(WarRecord.RAIDS, side, 1);
-        // A saturation bombardment scores through the bombardment itself, not as a raid won.
-        if (won && !(intel instanceof SatBombIntel)) {
+        if (won) {
             r.add(WarRecord.RAIDS_WON, side, 1);
             r.addEvent(new StoryEvent(now, StoryEvent.Kind.RAID, side, target == null ? null : target.getName()));
             r.addPoints(now, side, Settings.scoreRaidWon());
@@ -833,7 +848,6 @@ public final class WarTracker {
     private static boolean raidSucceeded(OffensiveFleetIntel intel) {
         if (intel instanceof BaseStrikeIntel) return intel.getOutcome() == OffensiveOutcome.SUCCESS;
         if (intel instanceof NexRaidIntel) return intel.isSucceeded();
-        if (intel instanceof SatBombIntel) return intel.getOutcome() == OffensiveOutcome.SUCCESS;
         return false;
     }
 

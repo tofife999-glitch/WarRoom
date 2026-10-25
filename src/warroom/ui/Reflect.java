@@ -26,6 +26,7 @@ final class Reflect {
     private static final int STATIC = 0x0008;
     private static final Object NONE = new Object();
     private static final Map<String, Object> cache = new HashMap<>();
+    private static final Map<String, Class<?>> classes = new HashMap<>();
 
     static {
         try {
@@ -65,7 +66,11 @@ final class Reflect {
 
     /** Calls a public static method of a class named by its full name. */
     static Object callStatic(String className, String name, Object... args) throws Throwable {
-        Class<?> c = Class.forName(className);
+        Class<?> c = classes.get(className);
+        if (c == null) {
+            c = Class.forName(className);
+            classes.put(className, c);
+        }
         Object m = method(c, name, args.length);
         if (m == null) throw new NoSuchMethodException(className + "." + name);
         return METHOD_INVOKE.invoke(m, (Object) null, args);

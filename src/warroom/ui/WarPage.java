@@ -330,7 +330,7 @@ final class WarPage {
                 Fmt.num(r.get(WarRecord.ENGAGEMENTS, right)), false, false, fights, true);
         int ca = r.get(WarRecord.CAPTURED, left);
         int cb = r.get(WarRecord.CAPTURED, right);
-        mirrored(body, info, w, Fmt.num(ca), "Colonies captured", Fmt.num(cb), ca > cb, cb > ca, null);
+        mirrored(body, info, w, Fmt.num(ca), "Colonies captured", Fmt.num(cb), ca > cb, cb > ca, Tips.captures(r, left));
         counter(body, info, w, r, WarRecord.CAPTURED_SIZE, left, "Colony size captured", true, null);
         int ba = r.get(WarRecord.BOMBARDED_SIZE, left);
         int bb = r.get(WarRecord.BOMBARDED_SIZE, right);

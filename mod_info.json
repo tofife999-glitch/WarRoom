@@ -2,7 +2,7 @@
 	"id": "war_room",
 	"name": "War Room",
 	"author": "Jan",
-	"version": { "major": 0, "minor": 14, "patch": 0 },
+	"version": { "major": 0, "minor": 15, "patch": 0 },
 	"description": "Follow the Sector's wars from the Intel screen, as an intelligence report on your ship. Hostilities: every war under way, who holds the advantage, alliance wars with combined strength, and a full report per war. Archive: a timeline of every war on record with its key moments, and a Chronicle of events and Sector news. A faction's flag or name (or an alliance's name), or a button on the Factions screen, opens it for that faction or alliance, with its service record. Standings: how the factions and alliances compare in colonies, territory and wars. Briefing: how war weariness, peace, alliances, fleet pools and the war score work. Records begin when added; start a new save for the full history. Can be added to or removed from a running save.",
 	"gameVersion": "0.98a-RC8",
 	"utility": true,

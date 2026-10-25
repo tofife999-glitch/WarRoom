@@ -39,6 +39,8 @@ public final class WarData {
     public long since;
     /** When War Room last ran in this save (its last check, or the save); a long gap means it was taken out meanwhile. */
     public long lastCheck;
+    /** When War Room was last opened in this save, for "since your last look"; 0 before the first time. */
+    public long lastLook;
     /** Wars going on, by {@link WarRecord#pairKey}. Wars of a faction without colonies stay until they end. */
     public final Map<String, WarRecord> active = new LinkedHashMap<>();
     /** Ended wars, oldest first; at most ARCHIVE_CAP, plus ARCHIVE_PIRATE_CAP pirate-type ones. */
@@ -199,6 +201,8 @@ public final class WarData {
             if (since instanceof Number) d.since = ((Number) since).longValue();
             Object last = m.get("last");
             if (last instanceof Number) d.lastCheck = ((Number) last).longValue();
+            Object look = m.get("look");
+            if (look instanceof Number) d.lastLook = ((Number) look).longValue();
             Object v = m.get("v");
             int format = v instanceof Number ? ((Number) v).intValue() : 1;
             if (format < FORMAT) {
@@ -319,6 +323,7 @@ public final class WarData {
     public void write(Map<String, Object> m) {
         m.put("since", since);
         m.put("last", lastCheck);
+        if (lastLook != 0) m.put("look", lastLook);
         ArrayList<String> w = new ArrayList<>();
         for (WarRecord r : active.values()) w.add(r.encode());
         m.put("wars", w);

@@ -26,7 +26,7 @@ import java.util.List;
  * complete; if it fails, a note with a way back takes its place instead of the game crashing.
  */
 public final class Pages {
-    private static final float HEADER_H = 100f;
+    private static final float HEADER_H = 116f;
     /**
      * For the touches that run once (sync sweep, new-war flash, title settle): the view last built, and when War
      * Room was last on screen (a heartbeat on the page notes it every frame). A page counts as opened when the
@@ -58,6 +58,12 @@ public final class Pages {
         lastView = viewKey;
         lastSeenAt = wall;
         opening = opened;
+        if (back && !Demo.isOn()) {
+            // Opening War Room: what is new is counted from the last time it was opened in this save.
+            WarData wd = WarData.get();
+            View.lookSince = wd.lastLook;
+            wd.lastLook = now;
+        }
         panel.addComponent(panel.createCustomPanel(1f, 1f, new Heartbeat())).inTL(0f, 0f);
         long t0 = System.nanoTime();
         body(panel, width, bodyH, top, s, now);
@@ -154,6 +160,13 @@ public final class Pages {
         }
         Ui.text(head, p.text(), base, 0f, y + line + 4f, Math.max(120f, headW - colW - 20f), 1, Alignment.LMID,
                 p.highlights(), p.colors());
+        if (!Demo.isOn() && View.lookSince != 0) {
+            // What happened since War Room was last opened; hovering it lists the events.
+            Phrase since = sinceLook(d, View.lookSince, now);
+            Ui.Placed sl = Ui.text(head, since.text(), Misc.getGrayColor(), 0f, y + line + 22f, Math.max(120f, headW - colW - 20f),
+                    1, Alignment.LMID, since.highlights(), since.colors());
+            Ui.tooltip(head, sl.comp, Tips.since(View.lookSince, now));
+        }
         float tabY = HEADER_H - 26f;
         tab(head, View.Tab.HOSTILITIES, "Hostilities", "Wars under way.", 0, tabY);
         tab(head, View.Tab.ARCHIVE, "Archive", "Every war on record, and Sector news.", 1, tabY);
@@ -224,6 +237,15 @@ public final class Pages {
         Ui.tooltip(head, hit, Tips.text("War score points of every war shown, month by month over the "
                 + (cycles ? "past 3 cycles" : "time since records began") + ": fighting, captures, raids and bombardments. "
                 + "Rising or easing compares the last 3 months with the average."));
+    }
+
+    /** "Since your last look, 12 days ago: 1 new war, 3 colonies changed hands." */
+    private static Phrase sinceLook(WarData d, long since, long now) {
+        int days = Fmt.days(since, now);
+        Phrase p = new Phrase().add(days <= 0 ? "Since your last look earlier today: " : days == 1
+                ? "Since your last look yesterday: " : "Since your last look, " + days + " days ago: ");
+        int[] n = ActiveView.counts(d, since, now);
+        return n[0] + n[1] + n[2] == 0 ? p.add("no wars begun or ended, no colonies taken.") : Story.append(p, ActiveView.countsPhrase(n));
     }
 
     /** Notes that War Room is on screen, every frame it is. */

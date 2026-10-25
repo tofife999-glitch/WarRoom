@@ -133,12 +133,13 @@ final class Card {
             }
             Color h = Misc.getHighlightColor();
             Ui.Placed na = Ui.text(in, a, brightA && !dim ? h : text, PAD, y, numW, 1, Alignment.RMID);
-            Ui.text(in, labels[k], Misc.getGrayColor(), mid - labelW / 2f, y, labelW, 1, Alignment.MID);
+            Ui.Placed lb = Ui.text(in, labels[k], Misc.getGrayColor(), mid - labelW / 2f, y, labelW, 1, Alignment.MID);
             Ui.Placed nb = Ui.text(in, b, brightB && !dim ? h : text, mid + labelW / 2f + 6f, y, numW, 1, Alignment.LMID);
-            if (k != 1) {
-                Ui.tooltip(in, na.comp, Tips.fights(r, left));
-                Ui.tooltip(in, nb.comp, Tips.fights(r, left));
-            }
+            // The numbers explain themselves on hover; the captured colonies are listed by name.
+            Tips.Tip tip = k == 1 ? Tips.captures(r, left) : Tips.fights(r, left);
+            Ui.tooltip(in, na.comp, tip);
+            Ui.tooltip(in, nb.comp, tip);
+            if (k == 1) Ui.tooltip(in, lb.comp, tip);
             y += 18f;
         }
 

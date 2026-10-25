@@ -75,6 +75,8 @@ public final class View {
     static final Set<String> expanded = new HashSet<>();
     /** The ref of the war last opened, highlighted on the list after coming back. */
     static String lastOpened;
+    /** When War Room was opened before this time (from the save), for "since your last look"; 0 if never. */
+    static long lookSince;
     /**
      * The sorts: the Standings' column and the Hostilities tab's key (ActiveView.SORTS), -1 for the usual order;
      * {@code down} means least first.
@@ -139,6 +141,7 @@ public final class View {
 
     public static void reset() {
         tab = Tab.HOSTILITIES;
+        lookSince = 0;
         zoom = 0;
         chronicleFilter = 0;
         chronicleLimit = 100;

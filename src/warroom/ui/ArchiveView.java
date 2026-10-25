@@ -649,7 +649,9 @@ final class ArchiveView {
             for (WarRecord r : row.wars) {
                 long b = r.ended() ? r.end : now;
                 if (b < ws) continue;
-                segment(p, in, r, null, r.start, b, ws, span, x0, tw, c, now, walk, ticks, bands);
+                // The row's colours follow its latest war; an older war with its sides the other way round swaps them.
+                Color[] cr = r.id(r.left).equals(latest.id(left)) ? c : new Color[]{c[1], c[0]};
+                segment(p, in, r, null, r.start, b, ws, span, x0, tw, cr, now, walk, ticks, bands);
             }
         }
         // Today, through every row (over the bars).
@@ -1136,6 +1138,31 @@ final class ArchiveView {
                     break;
             }
         }
+        return out;
+    }
+
+    /**
+     * The newest entries of the whole Chronicle within the last cycle, at most {@code max}, newest first:
+     * {"2 Oct   The Hegemony captured ...", the war it belongs to or null}. Named and shown once, as in the Chronicle.
+     */
+    static List<Object[]> latest(WarData d, long now, boolean pirates, int max) {
+        List<Entry> es = entries(d, now - CYCLE_DAYS * DAY, now, new Focus(d, null, null, null), pirates);
+        es.sort(Comparator.comparingLong((Entry e) -> -e.time));
+        List<Object[]> out = new ArrayList<>();
+        for (int i = 0; i < es.size() && i < max; i++) {
+            Entry e = es.get(i);
+            out.add(new Object[]{Story.append(new Phrase().hl(Fmt.shortDate(e.time), Misc.getGrayColor()).add("   "), e.text), e.ref});
+        }
+        return out;
+    }
+
+    /** The Chronicle's entries logged after {@code from}, newest first, each as "2 Nov c206  The Hegemony captured ...". */
+    static List<Phrase> since(WarData d, long from, long now, boolean pirates) {
+        List<Entry> es = entries(d, from, now, new Focus(d, null, null, null), pirates);
+        es.removeIf(e -> e.time <= from);
+        es.sort(Comparator.comparingLong((Entry e) -> -e.time));
+        List<Phrase> out = new ArrayList<>();
+        for (Entry e : es) out.add(Story.append(new Phrase().hl(Fmt.date(e.time), Misc.getGrayColor()).add("   "), e.text));
         return out;
     }
 

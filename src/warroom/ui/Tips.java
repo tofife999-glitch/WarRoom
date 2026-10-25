@@ -10,6 +10,8 @@ import warroom.Fmt;
 import warroom.Score;
 import warroom.SectorSnapshot;
 import warroom.Settings;
+import warroom.data.StoryEvent;
+import warroom.data.WarData;
 import warroom.data.WarRecord;
 import warroom.track.Alliances;
 
@@ -95,6 +97,8 @@ final class Tips {
                     }
                     String al = s.alliance[i] == null ? null : s.alliance[i].getName();
                     t.addPara(al == null ? "No alliance." : "Member of " + al + ".", 3f);
+                    // Its wars now; pirates are left out, as nearly everyone is hostile to them.
+                    if (!s.pirate[i]) para(t, enemies(s, i), 3f);
                 } else {
                     t.addPara("Holds no colonies.", Misc.getGrayColor(), 6f);
                 }
@@ -119,6 +123,71 @@ final class Tips {
                     && Wars.name(s.factions.get(k).getId()).toLowerCase().compareTo(name) < 0)) place++;
         }
         return new int[]{place, of};
+    }
+
+    /** "At war with the Hegemony, Tri-Tachyon and 2 more." or "Not at war.", pirate factions left out. */
+    static Phrase enemies(SectorSnapshot s, int i) {
+        List<String> ids = new ArrayList<>();
+        for (int j : s.enemies(i)) {
+            if (!s.pirate[j]) ids.add(s.factions.get(j).getId());
+        }
+        Phrase p = new Phrase();
+        if (ids.isEmpty()) return p.add("Not at war.");
+        p.add("At war with ");
+        int shown = Math.min(3, ids.size());
+        for (int k = 0; k < shown; k++) {
+            if (k > 0) p.add(k == shown - 1 && ids.size() == shown ? " and " : ", ");
+            p.the(ids.get(k), false);
+        }
+        if (ids.size() > shown) p.add(" and " + (ids.size() - shown) + " more");
+        return p.add(".");
+    }
+
+    /** The colonies each side captured in this war, from its log: name, size and date. */
+    static Tip captures(final WarRecord r, final int left) {
+        return new Tip(420f) {
+            @Override
+            void fill(TooltipMakerAPI t) {
+                Color h = Misc.getHighlightColor();
+                for (int k = 0; k < 2; k++) {
+                    int side = k == 0 ? left : 1 - left;
+                    int total = r.get(WarRecord.CAPTURED, side);
+                    List<StoryEvent> taken = new ArrayList<>();
+                    for (StoryEvent e : r.story) {
+                        if (e.kind == StoryEvent.Kind.CAPTURE && e.side == side) taken.add(e);
+                    }
+                    para(t, new Phrase().the(r.id(side), true).add(total == 0 ? " captured no colonies."
+                            : total == 1 ? " captured 1 colony:" : " captured " + total + " colonies:"), k == 0 ? 0f : 10f);
+                    for (StoryEvent e : taken) {
+                        para(t, new Phrase().add("    ").hl(e.text == null ? "a colony" : e.text, h).add(" (size ").num(e.n(0))
+                                .add("), " + Fmt.date(e.time)), 2f);
+                    }
+                    if (taken.size() < total) {
+                        t.addPara("    and " + (total - taken.size()) + " more, older than the war log keeps.", Misc.getGrayColor(), 2f);
+                    }
+                }
+            }
+        };
+    }
+
+    /** What the Chronicle logged since your last look, newest first (at most 15 entries). */
+    static Tip since(final long from, final long now) {
+        return new Tip(600f) {
+            @Override
+            void fill(TooltipMakerAPI t) {
+                t.addPara("Since your last look, on " + Fmt.date(from) + ":", Misc.getGrayColor(), 0f);
+                List<Phrase> lines = ArchiveView.since(WarData.get(), from, now, View.showPirates);
+                if (lines.isEmpty()) {
+                    t.addPara("Nothing logged.", Misc.getGrayColor(), 6f);
+                    return;
+                }
+                int shown = Math.min(15, lines.size());
+                for (int i = 0; i < shown; i++) para(t, lines.get(i), i == 0 ? 6f : 3f);
+                if (lines.size() > shown) {
+                    t.addPara("And " + (lines.size() - shown) + " more in the Archive's Chronicle.", Misc.getGrayColor(), 6f);
+                }
+            }
+        };
     }
 
     /** How the war score behind the bar comes about, per side. */

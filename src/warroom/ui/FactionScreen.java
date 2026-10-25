@@ -33,8 +33,11 @@ public final class FactionScreen implements EveryFrameScript {
     private static final String LABEL = "Faction Archive (War Room)";
     private static final float BUTTON_H = 20f;
     private static final float PANEL_W = 260f;
+    /** While the Intel screen is open, the Factions screen is looked at this often (real time), not every frame. */
+    private static final long LOOK_EVERY_MS = 150L;
 
     private boolean broken;
+    private long lookedAt;
     /** The game's panel for the faction shown, which holds the button, and the button's own panel. */
     private WeakReference<Object> host = new WeakReference<>(null);
     private WeakReference<UIComponentAPI> added = new WeakReference<>(null);
@@ -60,6 +63,10 @@ public final class FactionScreen implements EveryFrameScript {
                 pending = null;
                 return;
             }
+            // A click on the button is answered at once; otherwise a few looks a second are plenty.
+            long wall = System.currentTimeMillis();
+            if (pending == null && wall - lookedAt < LOOK_EVERY_MS) return;
+            lookedAt = wall;
             Object core = coreUI();
             if (core == null) return;
             if (pending != null) {

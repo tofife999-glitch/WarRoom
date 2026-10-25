@@ -19,7 +19,11 @@ import warroom.data.WarRecord;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Hostilities tab: the pirate toggle on top, then "Your wars", "Other wars" and "Recently ended". Single
@@ -64,8 +68,13 @@ public final class ActiveView {
         if (View.warSort >= 0) {
             // Stable sorts: wars that tie keep the usual order.
             final int key = View.warSort;
-            Comparator<Wars.Item> items0 = Comparator.comparingDouble((Wars.Item i) -> value(i, key, now));
-            Comparator<WarRecord> wars0 = Comparator.comparingDouble((WarRecord r) -> value(r, key, now));
+            // Each worked out once.
+            Map<Wars.Item, Double> vi = new IdentityHashMap<>();
+            for (Wars.Item i : items) vi.put(i, value(i, key, now));
+            Map<WarRecord, Double> vr = new IdentityHashMap<>();
+            for (WarRecord r : ended) vr.put(r, value(r, key, now));
+            Comparator<Wars.Item> items0 = Comparator.comparingDouble(vi::get);
+            Comparator<WarRecord> wars0 = Comparator.comparingDouble(vr::get);
             mine.sort(View.warDown ? items0 : items0.reversed());
             other.sort(View.warDown ? items0 : items0.reversed());
             ended.sort(View.warDown ? wars0 : wars0.reversed());
@@ -149,17 +158,9 @@ public final class ActiveView {
      * the whole line opens the report of the war its current event belongs to.
      */
     private static void intercept(CustomPanelAPI body, TooltipMakerAPI t, float cw, WarData d, long now) {
-        List<Object[]> events = new ArrayList<>();
-        List<WarRecord> wars = new ArrayList<>(d.active.values());
-        wars.addAll(Wars.justEnded(d, View.showPirates, now));
-        for (WarRecord r : wars) {
-            if (!Wars.shown(r, View.showPirates, now)) continue;
-            for (StoryEvent e : r.story) {
-                if (e.kind != StoryEvent.Kind.BEGAN) events.add(new Object[]{r, e});
-            }
-        }
+        // The Chronicle's newest lines: both sides named, a faction's last colony lost shown once.
+        List<Object[]> events = ArchiveView.latest(d, now, View.showPirates, 5);
         if (events.isEmpty()) return;
-        events.sort(Comparator.comparingLong((Object[] o) -> -((StoryEvent) o[1]).time));
         Cycle cycle = new Cycle();
         CustomPanelAPI p = body.createCustomPanel(cw, 24f, cycle);
         TooltipMakerAPI in = p.createUIElement(cw, 24f, false);
@@ -174,14 +175,13 @@ public final class ActiveView {
         // From the left edge, so the word is never cut off.
         float lw = Flourish.orbitronLabelAt(in, "INTERCEPT", Flourish.AMBER, 0f, 4f);
         float x = lw + 10f;
-        for (int i = 0; i < events.size() && i < 5; i++) {
-            WarRecord r = (WarRecord) events.get(i)[0];
-            Phrase s = Story.dated(r, (StoryEvent) events.get(i)[1], true);
+        for (int i = 0; i < events.size(); i++) {
+            Phrase s = (Phrase) events.get(i)[0];
             Ui.Placed line = Ui.text(in, s.text(), Misc.getTextColor(), x, 4f, cw - x - ow - 8f, 1, Alignment.LMID,
                     s.highlights(), s.colors());
             line.label.setOpacity(i == 0 ? 1f : 0f);
             cycle.lines.add(line.label);
-            cycle.wars.add(r.id());
+            cycle.wars.add((String) events.get(i)[1]);
         }
         if (click) Ui.text(in, open, Misc.getBasePlayerColor(), cw - ow, 4f, ow, 1, Alignment.RMID);
         Ui.rect(in, 0f, 23f, cw, 1f, new Color(27, 55, 65));
@@ -283,10 +283,11 @@ public final class ActiveView {
         }
     }
 
-    /** The same for an item: an alliance war sums its fronts and is as old as its first. */
+    /** The same for an item: an alliance war sums its fronts (ended ones too, as its block does) and is as old as its first. */
     private static double value(Wars.Item i, int key, long now) {
         if (i.group == null) return value(i.war, key, now);
-        Wars.AllianceWar g = i.group;
+        Wars.AllianceWar whole = WarPage.findGroup(i.group.key);
+        Wars.AllianceWar g = whole != null ? whole : i.group;
         if (key == 0) return (g.ended() ? g.end() : now) - g.start();
         double sum = 0;
         float pl = 0f;
@@ -348,31 +349,46 @@ public final class ActiveView {
 
     /** "Past 90 days: 1 new war, 1 ceasefire or treaty, 3 colonies changed hands." for the header. */
     static Phrase recent(WarData d, long now) {
-        int began = 0;
-        int peace = 0;
-        int taken = 0;
         long window = Settings.recentDays() * WarData.DAY;
-        long from = now - window;
-        List<WarRecord> all = new ArrayList<>(d.active.values());
-        all.addAll(d.archive);
-        for (WarRecord r : all) {
-            if (r.pirate && !View.showPirates) continue;
-            for (StoryEvent e : r.story) {
-                if (e.time < from) continue;
-                if (e.kind == StoryEvent.Kind.BEGAN && r.startKnown && r.start > d.since) began++;
-                else if (e.kind == StoryEvent.Kind.ENDED && r.endReason == WarRecord.END_PEACE) peace++;
-                else if (e.kind == StoryEvent.Kind.CAPTURE) taken++;
-            }
-        }
         Phrase p = new Phrase();
         if (now - d.since < window) {
             p.add("Since records began on ").hl(Fmt.date(d.since), Misc.getHighlightColor()).add(": ");
         } else {
             p.add(Wars.recentLabel() + ": ");
         }
-        p.num(began).add(began == 1 ? " new war, " : " new wars, ").num(peace)
-                .add(peace == 1 ? " ceasefire or treaty, " : " ceasefires or treaties, ")
-                .num(taken).add(taken == 1 ? " colony changed hands." : " colonies changed hands.");
-        return p;
+        return Story.append(p, countsPhrase(counts(d, now - window, now)));
+    }
+
+    /**
+     * {wars begun, wars ended, colonies captured} logged after {@code from}, of the wars Hostilities shows; the
+     * fronts of an alliance war that began or ended on the same day count once, as the page counts it once.
+     */
+    static int[] counts(WarData d, long from, long now) {
+        int[] n = new int[3];
+        Set<String> once = new HashSet<>();
+        List<WarRecord> all = new ArrayList<>(d.active.values());
+        all.addAll(d.archive);
+        for (WarRecord r : all) {
+            if (!Wars.shown(r, View.showPirates, now)) continue;
+            String who = r.group != null ? "G:" + r.group : r.id();
+            for (StoryEvent e : r.story) {
+                if (e.time <= from) continue;
+                if (e.kind == StoryEvent.Kind.BEGAN && r.startKnown && r.start > d.since) {
+                    if (once.add("b" + who + "@" + e.time / WarData.DAY)) n[0]++;
+                } else if (e.kind == StoryEvent.Kind.ENDED) {
+                    if (once.add("e" + who + "@" + e.time / WarData.DAY)) n[1]++;
+                } else if (e.kind == StoryEvent.Kind.CAPTURE) {
+                    n[2]++;
+                }
+            }
+        }
+        return n;
+    }
+
+    /** "1 new war, 1 war ended, 3 colonies changed hands." */
+    static Phrase countsPhrase(int[] n) {
+        return new Phrase().num(n[0]).add(n[0] == 1 ? " new war, " : " new wars, ").num(n[1])
+                .add(n[1] == 1 ? " war ended, " : " wars ended, ")
+                .num(n[2]).add(n[2] == 1 ? " colony changed hands." : " colonies changed hands.");
     }
 }
